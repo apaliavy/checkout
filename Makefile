@@ -6,8 +6,21 @@ SERVICE_NAME  ?= checkout
 
 LOG_LEVEL ?= debug
 
+TOOLS += github.com/maxbrunsfeld/counterfeiter/v6
+
 .PHONY: all
-all: deps lint test build
+all:  deps tools lint test build
+
+.PHONY: $(TOOLS)
+$(TOOLS): %:
+	GOBIN=$(BINDIR) go install $*
+
+.PHONY: tools
+tools: deps $(TOOLS)
+
+.PHONY: mocks
+mocks:
+	@go generate ./...
 
 .PHONY: deps
 deps:
@@ -33,3 +46,7 @@ build:
 run: build
 	$(info Running LOG_LEVEL=$(LOG_LEVEL) $(BINDIR)/$(SERVICE_NAME))
 	@LOG_LEVEL=$(LOG_LEVEL) $(BINDIR)/$(SERVICE_NAME)
+
+.PHONY: clean
+clean:
+	@rm -rf $(BINDIR)

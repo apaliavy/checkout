@@ -1,5 +1,7 @@
 package stock
 
+import "fmt"
+
 type SKU string
 
 type Product struct {
@@ -10,9 +12,18 @@ type Product struct {
 type ProductsCollection map[SKU]Product
 
 func NewProductsCollection(products ...Product) ProductsCollection {
-	return ProductsCollection{} // todo: implement
+	collection := make(ProductsCollection)
+	for _, p := range products {
+		collection[p.SKU] = p
+	}
+
+	return collection
 }
 
 func (p ProductsCollection) GetUnitPrice(sku SKU) (int, error) {
-	return 0, nil // todo: implement
+	product, ok := p[sku]
+	if !ok {
+		return 0, fmt.Errorf("failed to get product price - unknown product(sku:%s)", sku)
+	}
+	return product.UnitPrice, nil
 }
