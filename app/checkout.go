@@ -6,3 +6,8 @@ type Checkout interface {
 	Scan(item string)
 	GetTotalPrice() int
 }
+
+// todo: better naming
+type MyCheckout struct {
+	// todo: implement
+}
