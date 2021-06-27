@@ -11,9 +11,25 @@ type SpecialOffer struct {
 type SpecialOffersCollection map[stock.SKU]SpecialOffer
 
 func NewSpecialOffersCollection(offers ...SpecialOffer) SpecialOffersCollection {
-	return SpecialOffersCollection{} // todo: implement
+	collection := make(SpecialOffersCollection)
+	for _, o := range offers {
+		collection[o.SKU] = o
+	}
+
+	return collection
 }
 
+// nolint: gocritic
 func (so SpecialOffersCollection) Apply(sku stock.SKU, quantity int) (int, int) {
-	return 0, 0 // todo: implement
+	offer, ok := so[sku]
+	if !ok {
+		return 0, quantity
+	}
+
+	price := 0
+	for ; quantity >= offer.Quantity; quantity -= offer.Quantity {
+		price += offer.SpecialPrice
+	}
+
+	return price, quantity
 }
