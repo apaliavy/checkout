@@ -1,0 +1,46 @@
+# This workflow ensures application is works well (it's possible to build a binary, all tests are passed and code static checks are also fine).
+on:
+  push:
+    branches:
+      - master
+
+name: Run application release flow (lint>build>test)
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.16
+      - name: Check out code
+        uses: actions/checkout@v1
+      - name: Run static checks
+        run: make lint
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.16
+      - name: Check out code
+        uses: actions/checkout@v1
+      - name: Create a binary
+        run: make build
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.16
+      - name: Check out code
+        uses: actions/checkout@v1
+      - name: Run unit tests
+        run: make test
