@@ -4,6 +4,7 @@ import (
 	"github.com/apaliavy/checkout/app/stock"
 
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 )
 
 // nolint: lll
@@ -21,6 +22,7 @@ type Calculator interface {
 type Cashier struct {
 	calculator Calculator
 	items      map[string]int
+	logger     logrus.FieldLogger
 }
 
 // NewCashier gives you a pointer to the Cashier instance with provided Calculator.
@@ -28,12 +30,15 @@ func NewCashier(c Calculator) *Cashier {
 	return &Cashier{
 		calculator: c,
 		items:      make(map[string]int),
+		logger:     logrus.New(),
 	}
 }
 
 // Scan an item and put it into cart.
 // Each time when you scan item with existing sku it increases items count.
 func (c *Cashier) Scan(sku string) {
+	c.logger.Infof("scanning #%s", sku)
+
 	itemsInCard := c.items[sku]
 	c.items[sku] = itemsInCard + 1
 }
