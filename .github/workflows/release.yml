@@ -2,7 +2,7 @@
 on:
   push:
     branches:
-      - master
+      - main
 
 name: Run application release flow (lint>build>test)
 
