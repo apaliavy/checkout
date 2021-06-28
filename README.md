@@ -3,7 +3,7 @@
 ## Table of Contents
 
 - [Introduction](#introduction)
-- [Before you start]("#Before you start")  
+- [Prerequisites](#prerequisites)  
 - [Installation](#installation)
 - [Testing](#testing)  
 - [Application](#application)
@@ -32,7 +32,7 @@ interface ICheckout
 }
 ```
 
-## Before you start
+## Prerequisites
 
 Ensure you have Golang installed. [Here](https://golang.org/doc/install) you can find official manual which describes how to do it step by step.
 
@@ -85,4 +85,38 @@ make test
 
 ## Application
 
-TBD (app structure)
+### `/cmd`
+
+Main applications for this project.
+
+The directory name for each application match the name of the executable we want to have (e.g., `/cmd/checkout`).
+
+### `/app`
+
+Private application and library code. This is the code we don't want others importing in their applications or libraries. 
+
+Here we have the following packages: 
+
+#### `/app/discount`
+
+This package contains information about special offers, special offers collection and methods to works with them.
+
+#### `/app/price`
+
+This package contains price calculation engine. `Calculator` calculates the total price, including information about special offers and regular prices.
+
+#### `/app/stock` 
+
+This package contains such entities like `Product` (the regular product, with non-special price) and collection to work with a set of product. Also, here we have a definition of `SKU` type.
+
+### `/bin`
+
+Place for project binaries (generated using `make build`)
+
+### `/testing`
+
+Place for generated mock files. Use `make mocks` to refresh content in this folder.
+
+### `/tools`
+
+A special folder, needed to import `counterfeiter` library (used to generate mock files).
